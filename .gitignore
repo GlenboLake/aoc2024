@@ -1,0 +1,2 @@
+# Don't commit real input files, that makes Eric sad.
+inputs/day*.txt

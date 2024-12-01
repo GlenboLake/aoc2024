@@ -27,7 +27,7 @@ def part2(filename):
 
 
 if __name__ == '__main__':
-    assert part1('sample01.txt') == 11
-    print('Part 1:', part1('day01.txt'))
-    assert part2('sample01.txt') == 31
-    print('Part 2:', part2('day01.txt'))
+    assert part1('inputs/sample01.txt') == 11
+    print('Part 1:', part1('inputs/day01.txt'))
+    assert part2('inputs/sample01.txt') == 31
+    print('Part 2:', part2('inputs/day01.txt'))
