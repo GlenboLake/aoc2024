@@ -71,6 +71,7 @@ def main(filename):
     running = True
 
     PROCEED = pygame.USEREVENT + 1
+    WAIT_FOR_MOVEMENT_STOP = pygame.USEREVENT + 2
 
     left_values, right_values = read_input(filename)
     left: list[ListItem] = [
@@ -124,25 +125,31 @@ def main(filename):
     ])
 
     def process_input():
-        nonlocal running
+        nonlocal running, PROCEED, WAIT_FOR_MOVEMENT_STOP
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                running = False
-                break
+                    running = False
+                    break
             if event.type == pygame.KEYDOWN:
-                match event.key:
-                    case pygame.K_ESCAPE:
-                        running = False
-                        break
+                    match event.key:
+                        case pygame.K_ESCAPE:
+                            running = False
+                            break
             if event.type == PROCEED:
-                next(animation_steps)()
+                    try:
+                        next(animation_steps)()
+                        pygame.time.set_timer(WAIT_FOR_MOVEMENT_STOP, 100)
+                    except StopIteration:
+                        pygame.time.set_timer(pygame.QUIT, 2000)
+            if event.type == WAIT_FOR_MOVEMENT_STOP:
+                    if all_items_still():
+                        pygame.time.set_timer(WAIT_FOR_MOVEMENT_STOP, 0)
+                        pygame.time.set_timer(PROCEED, 500, loops=1)
+
 
     def update():
-        anything_moving = not all_items_still()
         for item in left + right + diffs:
             item.update()
-        if anything_moving and all_items_still():  # Last one just stopped moving
-            pygame.time.set_timer(PROCEED, 500, loops=1)
 
     def render():
         nonlocal left, right
