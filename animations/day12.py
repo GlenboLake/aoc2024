@@ -9,8 +9,9 @@ import pygame
 from pygame import Vector2
 from pygame.color import THECOLORS
 
+from animations import Animation, Model
+
 TILE_SIZE = 0
-FPS = 60
 
 BRIGHT_COLORS = [
     color for color_tuple in THECOLORS.values()
@@ -193,7 +194,7 @@ def find_regions(grid):
     return regions
 
 
-class Map:
+class Map(Model):
     def __init__(self, filename):
         if os.path.exists(filename):
             with open(filename) as f:
@@ -213,48 +214,9 @@ class Map:
             region.render(surface)
 
 
-def is_quit(event: pygame.event.Event):
-    if event.type == pygame.QUIT:
-        return True
-    if event.type == pygame.KEYDOWN and event.key == pygame.K_ESCAPE:
-        return True
-    return False
-
-
-class Animation:
-    def __init__(self):
-        pygame.init()
-        self.window = pygame.display.set_mode((800, 800), flags=pygame.SRCALPHA)
-        pygame.display.set_caption('Day 12: Garden Groups')
-        pygame.display.set_icon(pygame.image.load('assets/aoc_favicon.png'))
-        self.clock = pygame.time.Clock()
-        self.model: Map = None  # noqa
-
-    def update(self):
-        self.model.update()
-
-    def render(self):
-        self.window.fill(0xFFFFFF)
-        self.model.render(self.window)
-
-    def run(self, model: Map):
-        self.model = model
-        running = True
-        while running:
-            for event in pygame.event.get():
-                if is_quit(event):
-                    running = False
-            self.update()
-            self.render()
-            pygame.display.update()
-            self.clock.tick(FPS)
-
-        pygame.quit()
-
-
 def main(filename):
     model = Map(filename)
-    Animation().run(model)
+    Animation(size=(840,840), caption='Day 12: Garden Groups').run(model)
 
 
 xo_test = '''\
