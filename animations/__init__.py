@@ -1,6 +1,20 @@
 from abc import abstractmethod
+from typing import NamedTuple
 
 import pygame
+
+
+class Point(NamedTuple):
+    x: int
+    y: int
+
+    def __add__(self, other):
+        x, y = other
+        return Point(self.x + x, self.y + y)
+
+    def __sub__(self, other):
+        x, y = other
+        return Point(self.x - x, self.y - y)
 
 
 class Model:
