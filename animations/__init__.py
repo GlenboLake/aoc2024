@@ -16,6 +16,9 @@ class Point(NamedTuple):
         x, y = other
         return Point(self.x - x, self.y - y)
 
+    def __str__(self):
+        return f'({self.x},{self.y})'
+
 
 class Model:
     @abstractmethod
@@ -23,7 +26,7 @@ class Model:
         pass
 
     @abstractmethod
-    def render(self, surface):
+    def render(self, surface: pygame.Surface):
         pass
 
 
