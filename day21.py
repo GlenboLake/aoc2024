@@ -43,12 +43,18 @@ def simple_move(before: str, after: str, pad: str):
     after_coord = pad_points[after]
     dx = after_coord.x - before_coord.x
     dy = after_coord.y - before_coord.y
-    return ''.join(chain(
-        ('v' for _ in range(dy)),
+    path = ''.join(chain(
         ('<' for _ in range(-dx)),
-        ('>' for _ in range(dx)),
         ('^' for _ in range(-dy)),
-    )) + 'A'
+        ('v' for _ in range(dy)),
+        ('>' for _ in range(dx)),
+    ))
+    if (
+            Point(before_coord.x, after_coord.y) not in pad_points.values() or
+            Point(after_coord.x, before_coord.y) not in pad_points.values()
+    ):
+        path = path[::-1]
+    return path
 
 
 @lru_cache
@@ -73,7 +79,7 @@ def numpad_move(before: str, after: str):
 
 # Cache all valid moves for the dir pad
 dir_moves: dict[tuple[str, str], str] = {
-    (before, after): simple_move(before, after, DIRECTIONAL_KEYPAD)
+    (before, after): simple_move(before, after, DIRECTIONAL_KEYPAD) + 'A'
     for before in DIRECTIONAL_KEYPAD
     for after in DIRECTIONAL_KEYPAD
     if not before.isspace() and not after.isspace()
